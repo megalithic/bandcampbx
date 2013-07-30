@@ -1,4 +1,8 @@
-bandcampbx
+BandCampBX
 ==========
 
-BandCampBX is a gem for accessing CampBX's API
+BandCampBX is a gem for accessing CampBX's Private API
+
+## License
+
+This software is licensed under [the MIT License.](./LICENSE.md)

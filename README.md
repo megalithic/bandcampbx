@@ -6,15 +6,11 @@ BandCampBX is a gem for accessing CampBX's Private API
 
 Add this line to your application's Gemfile:
 
-    gem 'bandcampbx'
+    gem 'bandcampbx', github: 'megalithic/bandcampbx'
 
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install bandcampbx
 
 ## License
 

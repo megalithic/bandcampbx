@@ -23,11 +23,11 @@ module BandCampBX
 
     private
     def url_for(endpoint)
-      base_url + endpoint + '/'
+      base_url + endpoint
     end
 
     def base_url
-      'https://www.campbx.com/api/'
+      'https://campbx.com/api/'
     end
 
     def auth_options

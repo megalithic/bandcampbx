@@ -20,12 +20,12 @@ module BandCampBX
       mapper.map_orders(net.post("myorders.php"))
     end
 
-    def buy!(amount, price)
-      trade!("buy", amount, price)
+    def buy!(quantity, price, trademode)
+      trade!("tradeenter.php", quantity, price, trademode)
     end
 
-    def sell!(amount, price)
-      trade!("sell", amount, price)
+    def sell!(quantity, price, trademode)
+      trade!("tradeenter.php", quantity, price, trademode)
     end
 
     def cancel(id, type)
@@ -43,9 +43,9 @@ module BandCampBX
       @mapper ||= Mapper.new
     end
 
-    def trade!(type, amount, price)
+    def trade!(endpoint, quantity, price, trademode)
       wrapping_standard_error do
-        mapper.map_order(net.post(type, { price: price.to_digits, amount: amount.to_digits }))
+        mapper.map_order(net.post(endpoint, { price: price.to_digits, quantity: quantity.to_digits, trademode: trademode.to_s }))
       end
     end
 

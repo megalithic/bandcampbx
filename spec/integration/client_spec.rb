@@ -35,7 +35,7 @@ describe "Integrating a client" do
           "datetime": "1234567",
           "type": 0,
           "price": "12.34",
-          "amount": "100"
+          "quantity": "100"
         }
       ]
     JSON
@@ -52,26 +52,26 @@ describe "Integrating a client" do
         {
           "id": "1",
           "datetime": "1234567",
-          "type": 0,
+          "type": "0",
           "price": "12.34",
-          "amount": "100"
+          "quantity": "100"
         }
       JSON
 
-      FakeWeb.register_uri(:post, "https://campbx.com/api/buy/", body: example_buy_response)
+      FakeWeb.register_uri(:post, "https://campbx.com/api/tradeenter.php", body: example_buy_response)
 
-      buy = subject.buy!(BigDecimal('1'), BigDecimal('100'))
+      buy = subject.buy!(BigDecimal('1'), BigDecimal('100'), "QuickBuy")
       expect(buy.type).to eq(:buy)
     end
 
     it "fails properly" do
       example_buy_response = <<-JSON
-        {"error"=>{"__all__"=>["Minimum order size is $1"]}}
+        {"error":{"__all__":["Minimum order quantity is 0.1"]}}
       JSON
 
-      FakeWeb.register_uri(:post, "https://campbx.com/api/buy/", body: example_buy_response)
+      FakeWeb.register_uri(:post, "https://campbx.com/api/tradeenter.php", body: example_buy_response)
 
-      expect{ subject.buy!(BigDecimal('1'), BigDecimal('100')) }.to raise_error(BandCampBX::StandardError, "Minimum order size is $1")
+      expect{ subject.buy!(BigDecimal('0.01'), BigDecimal('100'), 'QuickBuy') }.to raise_error(BandCampBX::StandardError, "Minimum order quantity is 0.1")
     end
   end
 
@@ -80,15 +80,15 @@ describe "Integrating a client" do
       {
         "id": "1",
         "datetime": "1234567",
-        "type": 1,
+        "type": "1",
         "price": "12.34",
-        "amount": "100"
+        "quantity": "100"
       }
     JSON
 
-    FakeWeb.register_uri(:post, "https://campbx.com/api/sell/", body: example_sell_response)
+    FakeWeb.register_uri(:post, "https://campbx.com/api/tradeenter.php", body: example_sell_response)
 
-    sell = subject.sell!(BigDecimal('1'), BigDecimal('100'))
+    sell = subject.sell!(BigDecimal('1'), BigDecimal('100'), "QuickSell")
     expect(sell.type).to eq(:sell)
   end
 
@@ -99,7 +99,7 @@ describe "Integrating a client" do
 
     FakeWeb.register_uri(:post, "https://campbx.com/api/tradecancel.php", body: example_cancel_response)
 
-    cancel = subject.cancel(12345)
+    cancel = subject.cancel(12345, "Buy")
     expect(cancel).to eq(true)
   end
 end

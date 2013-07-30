@@ -34,7 +34,7 @@ describe BandCampBX::Client do
     end
 
     it 'requests the balance from the API' do
-      expect(net).to have_received(:post).with('balance')
+      expect(net).to have_received(:post).with('myfunds.php')
     end
 
     it 'maps the API response to a Balance object' do
@@ -57,7 +57,7 @@ describe BandCampBX::Client do
     end
 
     it 'requests open orders from the API' do
-      expect(net).to have_received(:post).with('open_orders')
+      expect(net).to have_received(:post).with('myorders.php')
     end
 
     it 'maps the API response to an array of Order objects' do
@@ -75,18 +75,18 @@ describe BandCampBX::Client do
     end
 
     it 'submits a buy order to the API' do
-      client.buy!(BigDecimal('100'), BigDecimal('1'))
-      expect(net).to have_received(:post).with('buy', { amount: '100.0', price: '1.0' })
+      client.buy!(BigDecimal('100'), BigDecimal('1'), "QuickBuy")
+      expect(net).to have_received(:post).with('tradeenter.php', { quantity: '100.0', price: '1.0', trademode: 'QuickBuy' })
     end
 
     it 'maps the API response to an Order object' do
-      client.buy!(BigDecimal('100'), BigDecimal('1'))
+      client.buy!(BigDecimal('100'), BigDecimal('1'), "QuickBuy")
       expect(mapper).to have_received(:map_order).with(api_buy_response)
     end
 
     it 'wraps exceptions in its own class' do
       net.stub(:post).and_raise(StandardError)
-      expect{ client.buy!(BigDecimal('100'), BigDecimal('1')) }.to raise_error(BandCampBX::StandardError)
+      expect{ client.buy!(BigDecimal('100'), BigDecimal('1'), "QuickBuy") }.to raise_error(BandCampBX::StandardError)
     end
   end
 
@@ -97,11 +97,11 @@ describe BandCampBX::Client do
     before do
       net.stub(:post).and_return(api_sell_response)
       mapper.stub(:map_order).and_return(order_object)
-      client.sell!(BigDecimal('100'), BigDecimal('1'))
+      client.sell!(BigDecimal('100'), BigDecimal('1'), "QuickSell")
     end
 
     it 'submits a sell order to the API' do
-      expect(net).to have_received(:post).with('sell', { amount: '100.0', price: '1.0' })
+      expect(net).to have_received(:post).with('tradeenter.php', { quantity: '100.0', price: '1.0', trademode: 'QuickSell' })
     end
 
     it 'maps the API response to an Order object' do
@@ -110,7 +110,7 @@ describe BandCampBX::Client do
 
     it 'wraps exceptions in its own class' do
       net.stub(:post).and_raise(StandardError)
-      expect{ client.sell!(BigDecimal('100'), BigDecimal('1')) }.to raise_error(BandCampBX::StandardError)
+      expect{ client.sell!(BigDecimal('100'), BigDecimal('1'), "QuickSell") }.to raise_error(BandCampBX::StandardError)
     end
   end
 
@@ -120,11 +120,11 @@ describe BandCampBX::Client do
     before do
       net.stub(:post).and_return(api_cancel_response)
       mapper.stub(:map_cancel).and_return(true)
-      client.cancel(1234)
+      client.cancel(1234, "Buy")
     end
 
     it 'submits a cancel order to the API' do
-      expect(net).to have_received(:post).with('cancel_order', { id: '1234' })
+      expect(net).to have_received(:post).with('tradecancel.php', { id: '1234', type: 'Buy' })
     end
 
     it 'maps the API response to a boolean' do
@@ -133,7 +133,7 @@ describe BandCampBX::Client do
 
     it 'wraps exceptions in its own class' do
       net.stub(:post).and_raise(StandardError)
-      expect{ client.cancel(123) }.to raise_error(BandCampBX::StandardError)
+      expect{ client.cancel(123, "Buy") }.to raise_error(BandCampBX::StandardError)
     end
   end
 end

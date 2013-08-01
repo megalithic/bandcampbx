@@ -76,7 +76,7 @@ describe BandCampBX::Client do
 
     it 'submits a buy order to the API' do
       client.buy!(BigDecimal('100'), BigDecimal('1'), "QuickBuy")
-      expect(net).to have_received(:post).with('tradeenter.php', { quantity: '100.0', price: '1.0', trademode: 'QuickBuy' })
+      expect(net).to have_received(:post).with('tradeenter.php', { quantity: '100.0', price: '1.0', order_type: 'QuickBuy' })
     end
 
     it 'maps the API response to an Order object' do
@@ -101,7 +101,7 @@ describe BandCampBX::Client do
     end
 
     it 'submits a sell order to the API' do
-      expect(net).to have_received(:post).with('tradeenter.php', { quantity: '100.0', price: '1.0', trademode: 'QuickSell' })
+      expect(net).to have_received(:post).with('tradeenter.php', { quantity: '100.0', price: '1.0', order_type: 'QuickSell' })
     end
 
     it 'maps the API response to an Order object' do

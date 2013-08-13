@@ -17,6 +17,8 @@ module BandCampBX
     end
 
     def post(endpoint, options={})
+      STDOUT.puts endpoint
+      STDOUT.puts options.inspect
       raw_post(endpoint, options)
       # map_response(raw_post(endpoint, options))
     end

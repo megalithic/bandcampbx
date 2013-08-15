@@ -11,14 +11,13 @@ module BandCampBX
     end
 
     def map_orders(json)
-      STDOUT.puts json
       orders_data = parsed(json)
       # NOTE: This is because when there are no orders of a given type, the response looks like: {"Buy":[{"Info":"No open Buy Orders"}], ...}
       orders_data = { "Buy" => without_empty_results(orders_data["Buy"]), "Sell" => without_empty_results(orders_data["Sell"]) }
       orders = []
       orders += orders_data["Buy"].map{|o| map_order(o.merge(type: :buy)) }
       orders += orders_data["Sell"].map{|o| map_order(o.merge(type: :sell)) }
-      orders.map{|o| map_order(o) }
+      orders
     end
 
     def map_order(order)

@@ -29,15 +29,18 @@ describe "Integrating a client" do
 
   it "handles #orders" do
     example_orders = <<-JSON
-      [
-        {
-          "id": "1",
-          "datetime": "1234567",
-          "type": 0,
-          "price": "12.34",
-          "quantity": "100"
-        }
-      ]
+      {
+        "Buy": [
+          {
+            "id": "1",
+            "datetime": "1234567",
+            "type": 0,
+            "price": "12.34",
+            "quantity": "100"
+          }
+        ],
+        "Sell": []
+      }
     JSON
 
     FakeWeb.register_uri(:post, "https://campbx.com/api/myorders.php", body: example_orders)

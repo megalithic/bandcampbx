@@ -20,15 +20,17 @@ module BandCampBX
       orders
     end
 
+    def map_trade(trade)
+      handle_error(parsed(trade))
+      parsed(trade)["Success"].to_i
+    end
+
     def map_order(order)
-      if is_error?(parsed(order))
-        raise StandardError.new(parsed(order)["Error"])
-      else
-        begin
-          Entities::Order.new(parsed(order)) # NOTE: They give back {"Success"=>"1000486"} - we can't map that to an order
-        rescue Exception => e
-          raise StandardError.new(e.message)
-        end
+      handle_error(parsed(order))
+      begin
+        Entities::Order.new(parsed(order)) # NOTE: They give back {"Success"=>"1000486"} - we can't map that to an order
+      rescue Exception => e
+        raise StandardError.new(e.message)
       end
     end
 
@@ -46,6 +48,10 @@ module BandCampBX
       else
         json
       end
+    end
+
+    def handle_error(data)
+      raise StandardError.new(data["Error"]) if is_error?(data)
     end
 
     def is_error?(data)

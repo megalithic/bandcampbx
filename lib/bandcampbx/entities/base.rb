@@ -40,8 +40,17 @@ module BandCampBX
       private
       def map_instance_variables(hash)
         self.class.keys.each do |key|
-          instance_variable_set("@#{key}", self.class.mappings[key].call(hash[key.to_s].to_s))
+          attribute_name = self.class.attribute_name_for(key)
+          instance_variable_set("@#{key}", self.class.mappings[key].call(hash[self.class.attribute_name_for(key)].to_s))
         end
+      end
+
+      def self.attribute_name_for(key)
+        attribute_names[key]
+      end
+
+      def self.attribute_names
+        raise "NYI - attribute_names"
       end
 
       def check_for_errors(hash)

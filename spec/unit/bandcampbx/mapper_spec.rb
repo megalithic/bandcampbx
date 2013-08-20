@@ -22,16 +22,29 @@ describe BandCampBX::Mapper do
     end
   end
 
+  describe '#map_order' do
+    let(:order) { double }
+  end
+
   describe '#map_orders' do
     let(:order) { double }
 
-    before do
-      Entities::Order.stub(:new).and_return(order)
+    it "filters out empty results appropriately" do
+      empty_json = '{"Buy": [{"Info":"No open Buy Orders"}], "Sell": [{"Info":"No open Sell Orders"}]}'
+      expect(mapper.map_orders(empty_json)).to eq([])
     end
 
-    it "maps an open_orders API response into an array of Order entities" do
-      mapper.map_orders(json_array)
-      expect(Entities::Order).to have_received(:new).with(json_parse(json_array)[0])
+    it "returns an Order if mapped appropriately" do
+      Entities::Order.stub(:new).and_return(order)
+      expect(mapper.map_order(json_object)).to eq(order)
+    end
+
+    it "raises a StandardError if it doesn't know what to do with a mapping" do
+      expect{ mapper.map_order('{}') }.to raise_error(StandardError)
+    end
+
+    it "raises an InvalidTradeTypeError if that message comes back from the API" do
+      expect{ mapper.map_order('{"Error":"Invalid trade type."}') }.to raise_error(StandardError, "Invalid trade type.")
     end
   end
 

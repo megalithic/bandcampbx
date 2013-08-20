@@ -5,6 +5,7 @@ require 'json'
 
 module BandCampBX
   class StandardError < ::StandardError; end
+  class InvalidTradeTypeError < StandardError; end
 
   module Helpers
     def self.json_parse(string)

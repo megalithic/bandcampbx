@@ -6,12 +6,14 @@ module BandCampBX
       def self.mappings
         {
           usd_balance: map_decimal,
-          btc_balance: map_decimal,
-          usd_reserved: map_decimal,
-          btc_reserved: map_decimal,
-          usd_available: map_decimal,
-          btc_available: map_decimal,
-          fee: map_decimal
+          btc_balance: map_decimal
+        }
+      end
+
+      def self.attribute_names
+        {
+          usd_balance: "Total USD",
+          btc_balance: "Total BTC"
         }
       end
 

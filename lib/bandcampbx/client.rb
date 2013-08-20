@@ -45,7 +45,8 @@ module BandCampBX
 
     def trade!(endpoint, quantity, price, order_type)
       wrapping_standard_error do
-        mapper.map_order(net.post(endpoint, { price: price.to_digits, quantity: quantity.to_digits, order_type: order_type.to_s }))
+        response = net.post(endpoint, { Price: price.to_digits, Quantity: quantity.to_digits, TradeMode: order_type.to_s })
+        mapper.map_trade(response)
       end
     end
 

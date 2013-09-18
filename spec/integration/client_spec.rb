@@ -66,7 +66,7 @@ describe "Integrating a client" do
 
     it "fails properly" do
       example_buy_response = <<-JSON
-        {"error":{"__all__":["Minimum order quantity is 0.1"]}}
+        {"Error":"Minimum order quantity is 0.1"}
       JSON
 
       FakeWeb.register_uri(:post, "https://campbx.com/api/tradeenter.php", body: example_buy_response)

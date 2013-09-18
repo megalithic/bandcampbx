@@ -35,34 +35,12 @@ describe BandCampBX::Entities::Order do
   end
 
   context "an unsuccessful order" do
-    context "with an __all__ key" do
-      let(:order_hash){
-        # Don't get mad at me, not my fault CampBX errors look like this
-        {
-          "error" => {
-            "__all__" => ["Minimum order size is $1"]
-          }
-        }
-      }
+    let(:order_hash){
+      { "Error" => "Minimum order size is $1" }
+    }
 
-      it "raises an appropriate error" do
-        expect{ subject }.to raise_error(BandCampBX::StandardError, "Minimum order size is $1")
-      end
-    end
-
-    context "without an __all__ key" do
-      let(:order_hash){
-        # Don't get mad at me, not my fault CampBX errors look like this
-        {
-          "error" => {
-            "neg" => ["Minimum order size is $1"]
-          }
-        }
-      }
-
-      it "raises an appropriate error" do
-        expect{ subject }.to raise_error(BandCampBX::StandardError, "CampBX API Error #404")
-      end
+    it "raises an appropriate error" do
+      expect{ subject }.to raise_error(BandCampBX::StandardError, "Minimum order size is $1")
     end
   end
 end

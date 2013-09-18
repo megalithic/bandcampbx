@@ -45,12 +45,8 @@ module BandCampBX
       end
 
       def check_for_errors(hash)
-        if hash.has_key?("error")
-          if hash["error"].has_key?("__all__")
-            raise BandCampBX::StandardError.new(hash["error"]["__all__"].join(".  "))
-          else
-            raise BandCampBX::StandardError.new("CampBX API Error #404")
-          end
+        if hash.has_key?("Error")
+          raise BandCampBX::StandardError.new(hash["Error"])
         end
       end
     end

@@ -115,4 +115,14 @@ describe "Integrating a client" do
     cancel = subject.cancel(12345, "Buy")
     expect(cancel).to eq(true)
   end
+
+  it "handles #ticker" do
+    example_ticker_response = <<-JSON
+      {"Last Trade":"143.23","Best Bid":"142.92","Best Ask":"143.99"}
+    JSON
+
+    FakeWeb.register_uri(:post, "https://campbx.com/api/xticker.php", body: example_ticker_response)
+    ticker = subject.ticker
+    expect(ticker).to eq({trade: 143.23, bid: 142.92, ask: 143.99})
+  end
 end

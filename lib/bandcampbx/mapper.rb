@@ -38,6 +38,15 @@ module BandCampBX
       parsed(result) == 'true'
     end
 
+    def map_ticker(result)
+      parsed_result = parsed(result)
+      {
+        ask: parsed_result["Best Ask"].to_f,
+        bid: parsed_result["Best Bid"].to_f,
+        trade: parsed_result["Last Trade"].to_f
+      }
+    end
+
     private
     # Allow passing either a String or anything else in.  If it's not a string,
     # we assume we've already parsed it and just give it back to you.  This

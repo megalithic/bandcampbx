@@ -54,4 +54,12 @@ describe BandCampBX::Mapper do
       expect(mapper.map_cancel('"false"')).to eq(false)
     end
   end
+
+  describe "#map_ticker" do
+    it "maps a ticker response to a JSON object" do
+      json_string = "{\"Last Trade\":\"143.23\",\"Best Bid\":\"142.92\",\"Best Ask\":\"143.99\"}"
+      json_object = {trade: 143.23, bid: 142.92, ask: 143.99}
+      expect(mapper.map_ticker(json_string)).to eq(json_object)
+    end
+  end
 end

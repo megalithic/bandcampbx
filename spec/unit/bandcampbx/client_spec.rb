@@ -136,4 +136,27 @@ describe BandCampBX::Client do
       expect{ client.cancel(123, "Buy") }.to raise_error(BandCampBX::StandardError)
     end
   end
+
+  describe 'ticker' do
+    let(:api_ticker_response){ double }
+    let(:ticker_object){ double }
+
+    before do
+      net.stub(:post).and_return(api_ticker_response)
+      mapper.stub(:map_ticker).and_return(ticker_object)
+      client.ticker
+    end
+
+    it 'submits a cancel order to the API' do
+      expect(net).to have_received(:post).with('xticker.php')
+    end
+
+    it 'maps the API response to a boolean' do
+      expect(mapper).to have_received(:map_ticker).with(api_ticker_response)
+    end
+
+    it 'wraps exceptions in its own class' do
+      expect(client.ticker).to eq(ticker_object)
+    end
+  end
 end

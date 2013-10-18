@@ -34,6 +34,10 @@ module BandCampBX
       end
     end
 
+    def ticker
+      mapper.map_ticker(net.post("xticker.php"))
+    end
+
     private
     def net
       @net ||= Net.new(self)
